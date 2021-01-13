@@ -1,4 +1,5 @@
 #pragma once
+#include "algorithm.hpp"
 
 #define DEFAULE_CAPACITY 3
 
@@ -14,7 +15,9 @@ public:
     Vector(const T &e, size_t n) : _capacity(n * 2), // 初始化n个e元素
                                    _size(n)
     {
-        this->element = new T[_capacity](e);
+        this->element = new T[_capacity]();
+        for (int i = 0; i < this->_size; ++i)
+            this->element[i] = e;
     }
     Vector(const Vector &vec) // 深拷贝构造
     {
@@ -25,7 +28,7 @@ public:
         this->element = new T[this->_capacity]();
         for (int i = 0; i < vec.size(); ++i)
         {
-            this->element[i] = vec[i];
+            this->element[i] = vec.element[i];
         }
     }
     Vector(const Vector &vec, int l, int r) // 拷贝[l,r)区间的元素
@@ -36,7 +39,7 @@ public:
         this->element = new T[this->_capacity = this->_size * 2]();
         for (int i = 0; i < this->_size; ++i)
         {
-            this->element[i] = vec[l + i];
+            this->element[i] = vec.element[l + i];
         }
     }
     ~Vector() { delete[] this->element; }
@@ -45,9 +48,18 @@ public:
     size_t size() const { return this->_size; }
     size_t capacity() const { return this->_capacity; }
     bool empty() const { return !this->_size; }
-    // bool isOrdered() const;
+    bool isOrdered() const
+    {
+        for (int i = 0; i < this->_size - 1; ++i)
+        {
+            if (this->element[i] > this->element[i + 1])
+                return false;
+        }
+
+        return true;
+    }
     // int find(const T &e) const; // 无序向量查找
-    // int find(const T &e) const; // 有序向量查找
+    // int search(const T &e) const; // 有序向量查找
 
     T &operator[](int index)
     {
@@ -80,18 +92,51 @@ public:
 
         this->_size -= len;
     }
-    // int insert(int index, const T &e);
-    // int insert(const T &e); // 在末尾插入
+    int insert(int index, const T &e)
+    {
+        if (this->_size >= this->_capacity)
+            this->expand();
+
+        for (int i = this->_size - 1; i >= index; --i)
+            this->element[i + 1] = this->element[i];
+
+        this->element[index] = e;
+        this->_size++;
+    }
     int pushBack(const T &e)
     {
         if (this->_size >= this->_capacity)
             this->expand();
+
         this->element[_size++] = e;
     }
     // int emplaceBack(const T &&e);
-    // void sort();                  // 自排序
-    // void deduplicate();           // 去重
-    // void traverse(void (*)(T &)); // 遍历
+    void sort() // 自排序
+    {
+        bubbleSort(this->element, this->_size);
+    }
+    void deduplicate()
+    {
+        this->sort();
+        int duplicateLen = 0;
+        for (int i = 1; i < this->_size; ++i)
+        {
+            if (this->element[i] == this->element[i - 1 - duplicateLen])
+            {
+                this->_size--;
+                continue;
+            }
+            else if (duplicateLen)
+            {
+                this->element[i - duplicateLen] = this->element[i];
+            }
+        }
+    }
+    void traverse(void (*fun)(T &)) // 遍历
+    {
+        for (int i = 0; i < this->_size; ++i)
+            fun(this->element[i]);
+    }
     // template <typename FT>
     // void traverse(FT &); // 遍历(使用函数对象)
 
