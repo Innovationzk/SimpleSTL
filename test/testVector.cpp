@@ -16,8 +16,6 @@ void printVector(Vector<T> &vec)
 
 void testConstructor()
 {
-    cout << '[' << __FUNCTION__ << ']' << "------------test start----------------\n";
-
     Vector<int> vec1;
     Vector<int> vec2(12345, 10);
 
@@ -39,7 +37,7 @@ void testConstructor()
             goto error;
     }
 
-    cout << '[' << __FUNCTION__ << ']' << "------------test end----------------\n";
+    cout << '.';
     return;
 
 error:
@@ -49,8 +47,6 @@ error:
 
 void testSort()
 {
-    cout << '[' << __FUNCTION__ << ']' << "------------test start----------------\n";
-
     Vector<int> vec(12345, 10);
     for (int i = 1; i < 100000; i += i)
     {
@@ -65,7 +61,7 @@ void testSort()
     if (!vec.isOrdered())
         goto error;
 
-    cout << '[' << __FUNCTION__ << ']' << "------------test end----------------\n";
+    cout << '.';
     return;
 
 error:
@@ -73,31 +69,64 @@ error:
     return;
 }
 
-
-// TODO
 void testDeduplicate()
 {
-    cout << '[' << __FUNCTION__ << ']' << "------------test start----------------\n";
-
     int array[] = {8, 8, 8, 123, 123, 45, 45, 45, 77, 77, 789, 789, 5, 6};
     int array1[] = {5, 6, 8, 45, 77, 123, 789};
     Vector<int> vec;
     for (auto i : array)
         vec.pushBack(i);
-    
-    printVector(vec);
+
     vec.deduplicate();
-    printVector(vec);
 
     for (int i = 0; i < vec.size(); ++i)
         if (vec[i] != array1[i])
             goto error;
 
-    cout << '[' << __FUNCTION__ << ']' << "------------test end----------------\n";
+    cout << '.';
     return;
 
 error:
-    cout << '[' << __FUNCTION__ << ']' << "----------test failed!--------------\n";
+    cout << "\n[" << __FUNCTION__ << ']' << "----------test failed!--------------\n";
+    return;
+}
+
+void testFind()
+{
+    int array[] = {8, 8, 8, 123, 123, 45, 45, 45, 77, 77, 789, 789, 5, 6};
+    Vector<int> vec;
+    for (auto i : array)
+        vec.pushBack(i);
+
+    if (vec.find(8) != 0 || vec.find(45) != 5 || vec.find(789) != 10 || vec.find(10) != -1)
+        goto error;
+
+    cout << '.';
+    return;
+
+error:
+    cout << "\n[" << __FUNCTION__ << ']' << "----------test failed!--------------\n";
+    return;
+}
+
+void testSearch()
+{
+    int array[] = {8, 8, 8, 123, 123, 45, 45, 45, 77, 77, 789, 789, 5, 6};
+    Vector<int> vec;
+    for (auto i : array)
+        vec.pushBack(i);
+
+    // 5 6 8 8 8 45 45 45 77 77 123 123 789 789
+    vec.sort();
+
+    if (vec.search(5) != 0 || vec.search(8) != 2 || vec.search(45) != 5 || vec.search(1234) != -1)
+        goto error;
+
+    cout << '.';
+    return;
+
+error:
+    cout << "\n[" << __FUNCTION__ << ']' << "----------test failed!--------------\n";
     return;
 }
 
@@ -106,6 +135,8 @@ int main()
     testConstructor();
     testSort();
     testDeduplicate();
+    testFind();
+    testSearch();
 
     return 0;
 }

@@ -58,8 +58,41 @@ public:
 
         return true;
     }
-    // int find(const T &e) const; // 无序向量查找
-    // int search(const T &e) const; // 有序向量查找
+    int find(const T &e) const // 无序向量查找
+    {
+        for (int i = 0; i < this->size(); ++i)
+        {
+            if (this->element[i] == e)
+                return i;
+        }
+        return -1;
+    }
+    int search(const T &e) const // 有序向量查找
+    {
+        int l = 0, r = this->_size;
+        while (l < r - 1)
+        {
+            int mid = (l + r) / 2;
+            if (e == this->element[mid])
+            {
+                while (--mid > 0)
+                {
+                    if (e != this->element[mid])
+                        break;
+                }
+                return mid + 1;
+            }
+            if (e < this->element[mid])
+                r = mid;
+            else
+                l = mid + 1;
+        }
+
+        if (e == this->element[l])
+            return l;
+        else
+            return -1;
+    }
 
     T &operator[](int index)
     {
@@ -110,6 +143,7 @@ public:
 
         this->element[_size++] = e;
     }
+    // TODO
     // int emplaceBack(const T &&e);
     void sort() // 自排序
     {
@@ -123,7 +157,7 @@ public:
         {
             if (this->element[i] == this->element[i - 1 - duplicateLen])
             {
-                this->_size--;
+                ++duplicateLen;
                 continue;
             }
             else if (duplicateLen)
@@ -131,12 +165,14 @@ public:
                 this->element[i - duplicateLen] = this->element[i];
             }
         }
+        this->_size -= duplicateLen;
     }
     void traverse(void (*fun)(T &)) // 遍历
     {
         for (int i = 0; i < this->_size; ++i)
             fun(this->element[i]);
     }
+    // TODO
     // template <typename FT>
     // void traverse(FT &); // 遍历(使用函数对象)
 
