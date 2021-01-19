@@ -1,8 +1,8 @@
-algorithm:testAlgorithm.o
-	g++ testAlgorithm.o -o testAlgorithm
+algorithm:algorithm.o
+	g++ algorithm.o -o algorithm
 
-testAlgorithm.o:./testAlgorithm.cpp
-	g++ -c ./testAlgorithm.cpp -g -I ../include -o testAlgorithm.o
+algorithm.o:./testAlgorithm.cpp ../include/algorithm.hpp
+	g++ -c ./testAlgorithm.cpp -g -I ../include -o algorithm.o
 
 vector:vector.o
 	g++ vector.o -o vector
@@ -15,4 +15,4 @@ vector.o:./testVector.cpp ../include/vector.hpp
 all:algorithm vector
 
 clean:
-	rm -f testAlgorithm.o testAlgorithm vector.o vector
+	rm -f algorithm.o algorithm vector.o vector

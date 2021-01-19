@@ -1,13 +1,13 @@
 #pragma once
 #include "algorithm.hpp"
 
-#define DEFAULE_CAPACITY 3
+#define DEFAULT_CAPACITY 3
 
 template <typename T>
 class Vector
 {
 public:
-    Vector() : _capacity(DEFAULE_CAPACITY),
+    Vector() : _capacity(DEFAULT_CAPACITY),
                _size(0)
     {
         this->element = new T[_capacity]();
@@ -125,7 +125,7 @@ public:
 
         this->_size -= len;
     }
-    int insert(int index, const T &e)
+    void insert(int index, const T &e)
     {
         if (this->_size >= this->_capacity)
             this->expand();
@@ -136,7 +136,7 @@ public:
         this->element[index] = e;
         this->_size++;
     }
-    int pushBack(const T &e)
+    void pushBack(const T &e)
     {
         if (this->_size >= this->_capacity)
             this->expand();
