@@ -130,13 +130,47 @@ error:
     return;
 }
 
-//int main()
-//{
-//    testConstructor();
-//    testSort();
-//    testDeduplicate();
-//    testFind();
-//    testSearch();
-//
-//    return 0;
-//}
+void testInsert()
+{
+    int array[] = {8, 8, 8, 123, 123, 45, 45, 45, 77, 77, 789, 789, 5, 6};
+
+    Vector<int> vec;
+    for (auto i : array)
+        vec.pushBack(i);
+    // printVector(vec);
+
+    for (int i = 0;i<vec.size();++i)
+    {
+        if (array[i] != vec[i])
+            goto error;
+    }
+
+    for (int i=0;i<5;++i)
+        vec.popBack();
+    // printVector(vec);
+
+    for (int i = 0;i<vec.size();++i)
+    {
+        if (array[i] != vec[i])
+            goto error;
+    }
+
+    cout << '.';
+    return;
+
+error:
+    cout << "\n[" << __FUNCTION__ << ']' << "----------test failed!--------------\n";
+    return;
+}
+
+int main()
+{
+   testConstructor();
+   testSort();
+   testDeduplicate();
+   testFind();
+   testSearch();
+   testInsert();
+
+   return 0;
+}

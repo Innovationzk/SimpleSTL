@@ -143,6 +143,10 @@ public:
 
         this->element[_size++] = e;
     }
+    void popBack()
+    {
+        this->_size--;
+    }
     // TODO
     // int emplaceBack(const T &&e);
     void sort() // 自排序
