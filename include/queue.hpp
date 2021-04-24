@@ -1,10 +1,12 @@
 #pragma once
-
-#define DEFAULT_CAPACITY 16
+#include <algorithm.hpp>
 
 template <typename T>
 class Queue
 {
+public:
+    static constexpr int DEFAULT_CAPACITY = 3;
+
 public:
     Queue() {
         this->_capacity = DEFAULT_CAPACITY;
@@ -12,7 +14,7 @@ public:
     }
     void push(const T &e)
     {
-        if (this->firstIndex >= this->_capacity - 1)
+        if (this->firstIndex >= this->_capacity - 1 || this->firstIndex + this->_size >= this->_capacity)
         {
             size_t newcapacity = (this->_capacity - this->firstIndex) * 2;
             T *newelement = new T[newcapacity];
@@ -23,6 +25,7 @@ public:
             delete[] this->element;
             this->element = newelement;
             this->firstIndex = 0;
+            this->_capacity = newcapacity;
         }
         
         this->element[this->firstIndex + this->_size] = e;
