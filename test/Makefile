@@ -22,15 +22,21 @@ queue:queue.o
 queue.o:./testQueue.cpp ../include/queue.hpp
 	g++ -c ./testQueue.cpp -g -I ../include -o queue.o
 
+stack:stack.o
+	g++ stack.o -o stack
+
+stack.o:./testStack.cpp ../include/stack.hpp
+	g++ -c ./testStack.cpp -g -I ../include -o stack.o
+
 bintree:bintree.o
 	g++ bintree.o -o bintree
 
 bintree.o:./testBinTree.cpp ../include/bintree.hpp
 	g++ -c ./testBinTree.cpp -g -I ../include -o bintree.o
 
-.PHONY:all clean algorithm vector list bintree queue
+.PHONY:all clean algorithm vector list bintree queue stack
 
-all:algorithm vector list bintree queue
+all:algorithm vector list bintree queue stack
 
 clean:
-	rm -f algorithm.o algorithm vector.o vector list.o list bintree.o bintree queue queue.o
+	rm -f algorithm.o algorithm vector.o vector list.o list bintree.o bintree queue queue.o stack stack.o 
