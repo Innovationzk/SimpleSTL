@@ -1,11 +1,13 @@
 #pragma once
 #include "algorithm.hpp"
 
-#define DEFAULT_CAPACITY 3
 
 template <typename T>
 class Vector
 {
+public:
+    static constexpr int DEFAULT_CAPACITY = 3;
+
 public:
     Vector() : _capacity(DEFAULT_CAPACITY),
                _size(0)
@@ -101,6 +103,10 @@ public:
 
         return this->element[index];
     }
+    T back()
+    {
+        return this->element[this->_size - 1];
+    }
     T remove(int index)
     {
         T tmp = element[index];
@@ -143,9 +149,10 @@ public:
 
         this->element[_size++] = e;
     }
-    void popBack()
+    T popBack()
     {
         this->_size--;
+        return this->element[_size];
     }
     // TODO
     // int emplaceBack(const T &&e);
