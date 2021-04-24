@@ -1,3 +1,7 @@
+#pragma once
+#include "queue.hpp"
+#include "stack.hpp"
+
 template <class T>
 class BinNode
 {
@@ -21,11 +25,11 @@ public:
                                    npl(npl),
                                    color(color) {}
 
-    BinNode<T> *insertAsLc(const T &e)
+    void insertAsLc(const T &e)
     {
         this->lc = new BinNode<T>(e, this);
     }
-    BinNode<T> *insertAsRc(const T &e)
+    void insertAsRc(const T &e)
     {
         this->rc = new BinNode<T>(e, this);
     }
@@ -46,25 +50,128 @@ public:
     }
 
     template<typename VST>
-    void travPre(VST& visit)
+    void travPreRecurse(VST& visit)
     {
         visit(this->data);
-        if (this->lc) this->lc->travPre(visit);
-        if (this->rc) this->rc->travPre(visit);
+        if (this->lc) this->lc->travPreRecurse(visit);
+        if (this->rc) this->rc->travPreRecurse(visit);
     }
     template<typename VST>
-    void travIn(VST& visit)
+    void travInRecurse(VST& visit)
     {
-        if (this->lc) this->lc->travIn(visit);
+        if (this->lc) this->lc->travInRecurse(visit);
         visit(this->data);
-        if (this->rc) this->rc->travIn(visit);
+        if (this->rc) this->rc->travInRecurse(visit);
     }
     template<typename VST>
-    void travPost(VST& visit)
+    void travPostRecurse(VST& visit)
     {
-        if (this->lc) this->lc->travPost(visit);
-        if (this->rc) this->rc->travPost(visit);
+        if (this->lc) this->lc->travPostRecurse(visit);
+        if (this->rc) this->rc->travPostRecurse(visit);
         visit(this->data);
+    }
+    template<typename VST>
+    void travPreIterate(VST& visit)
+    {
+        Stack<BinNode<T>*> stk;
+        stk.push(this);
+        while(!stk.empty())
+        {
+            BinNode<T> *p = stk.pop();
+            visit(p->data);
+            if (p->rc) stk.push(p->rc);
+            if (p->lc) stk.push(p->lc);
+        }
+    }
+    template<typename VST>
+    void travInIterate(VST& visit)
+    {
+        Stack<BinNode<T>*> stk;
+        BinNode<T>* p = this;
+        while(p)
+        {
+            stk.push(p);
+            p=p->lc;
+        }
+
+        while(!stk.empty())
+        {
+            BinNode<T>* p = stk.pop();
+            visit(p->data);
+            if (p->rc) 
+            {
+                BinNode<T>* pp = p->rc;
+                while(pp)
+                {
+                    stk.push(pp);
+                    pp=pp->lc;
+                }
+            }
+        }
+    }
+
+    void goAloneRL(BinNode<T>* p, Stack<BinNode<T>*>& stk)
+    {
+        while(true)
+        {
+            stk.push(p);
+            if (p->lc)
+            {
+                if (p->rc)
+                {
+                    stk.push(p->rc);
+                }
+                p = p->lc;
+            }
+            else if (p->rc)
+            {
+                p = p->rc;
+            }
+            else break;
+        }
+    }
+
+    template<typename VST>
+    void travPostIterate(VST& visit)
+    {
+        Stack<BinNode<T>*> stk;
+        BinNode<T>* p = this;
+        goAloneRL(p,stk);
+
+        BinNode<T>* pre = stk.pop();
+        visit(pre->data);
+        while (!stk.empty())
+        {
+            BinNode<T>* top = stk.pop();
+            if (!top->lc && !top->rc)
+            {
+                visit(top->data);
+                pre = top;
+            }
+            else
+            {
+                if (top == pre->parent)
+                {
+                    visit(top->data);
+                    pre = top;
+                }
+                else goAloneRL(top,stk);
+            }
+        }
+    }
+
+    template<typename VST>
+    void travLevel(VST& visit)
+    {
+        Queue<BinNode<T>*> queue;
+        queue.push(this);
+        while(!queue.empty())
+        {
+            BinNode<T> *p = queue.pop();
+            visit(p->data);
+            if (p->lc) queue.push(p->lc);
+            if (p->rc) queue.push(p->rc);
+        }
     }
 
     T data;
@@ -83,7 +190,7 @@ public:
     BinTree() : root(nullptr), _size(0) {}
     bool empty() { return this->root; }
     int size() { return this->_size; }
-    BinNode<T> *insert(const T &e)
+    void insert(const T &e)
     {
         if (!this->root) this->root = new BinNode<T>(e);
         else
@@ -115,19 +222,40 @@ public:
     }
     void remove(const T &e);
     template<typename VST>
-    void travPre(VST& visit)
+    void travPreRecurse(VST& visit)
     {
-        if (root) root->travPre(visit);
+        if (root) root->travPreRecurse(visit);
     }
     template<typename VST>
-    void travIn(VST& visit)
+    void travInRecurse(VST& visit)
     {
-        if (root) root->travIn(visit);
+        if (root) root->travInRecurse(visit);
     }
     template<typename VST>
-    void travPost(VST& visit)
+    void travPostRecurse(VST& visit)
     {
-        if (root) root->travPost(visit);
+        if (root) root->travPostRecurse(visit);
+    }
+    template<typename VST>
+    void travPreIterate(VST& visit)
+    {
+        if (root) root->travPreIterate(visit);
+    }
+    template<typename VST>
+    void travInIterate(VST& visit)
+    {
+        if (root) root->travInIterate(visit);                 
+    }
+    template<typename VST>
+    void travPostIterate(VST& visit)
+    {
+        if (root) root->travPostIterate(visit);
+    }
+
+    template<typename VST>
+    void travLevel(VST& visit)
+    {
+        if (root) root->travLevel(visit);
     }
 
 private:
